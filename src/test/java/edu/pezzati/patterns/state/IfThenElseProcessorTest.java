@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
+
+import edu.pezzati.patterns.state.util.OurSqlConnection;
 
 /**
  * Processor flow: <br>
@@ -21,90 +21,88 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
  * @author fpezzati
  *
  */
-@PrepareForTest(IfThenElseProcessor.class)
 public class IfThenElseProcessorTest {
 
-	private Processor bulkyProcessor;
+	private IfThenElseProcessor bulkyProcessor;
+	private OurSqlConnection ourSqlConnection;
 
 	@BeforeEach
 	public void initEach() {
-		bulkyProcessor = Mockito.spy(new IfThenElseProcessor());
+		bulkyProcessor = new IfThenElseProcessor();
+		ourSqlConnection = Mockito.mock(OurSqlConnection.class);
+		bulkyProcessor.setSqlConnection(ourSqlConnection);
 	}
 
 	@Test
 	public void bulkyProcessoProvidesNoResultWithoutInput() {
-		Status initialStatus = null;
-		bulkyProcessor.setInput(initialStatus);
-		Status finalStatus = bulkyProcessor.getResult();
+		IfThenElseStatus initialStatus = null;
+		IfThenElseStatus finalStatus = bulkyProcessor.process( initialStatus);
 		Assertions.assertNull(finalStatus);
 	}
 
 	@Test
 	public void ifOperationAGoesWrongProcessorReturnsAKOState() throws Exception {
-		Status initialStatus = new InitialStatus();
-		bulkyProcessor.setInput(initialStatus);
-		Status expected = getKOStatusBecauseOperationAWentWrong();
-//		PowerMockito.when(bulkyProcessor, "applyOperationA", Mockito.any(Status.class)).thenThrow(new Exception());
-//		PowerMockito.when(bulkyProcessor, "applyOperationA").thenThrow(new Exception());
-		PowerMockito.doThrow(new Exception()).when(bulkyProcessor, "applyOperationA", initialStatus);
-		
-		
-		Status actual = bulkyProcessor.getResult();
+		IfThenElseStatus initialStatus = new IfThenElseStatus();
+		Mockito.doThrow(new Exception()).when(ourSqlConnection).doSomethingThatCanGoWrong();
+		IfThenElseStatus expected = getKOStatusBecauseOperationAWentWrong();
+		IfThenElseStatus actual = bulkyProcessor.process(initialStatus);
 		Assertions.assertEquals(expected, actual);
 	}
 	
 	@Test
-	public void ifOperationBGoesWrongProcessorReturnsAKOState() {
-		Status initialStatus = new InitialStatus();
-		bulkyProcessor.setInput(initialStatus);
-		Status expected = getKOStatusBecauseOperationBWentWrongSoOperationDCleanUp();
-		Status actual = bulkyProcessor.getResult();
+	public void ifOperationBGoesWrongProcessorReturnsAKOState() throws Exception {
+		IfThenElseStatus initialStatus = new IfThenElseStatus();
+		Mockito.doNothing().doThrow(new Exception()).doNothing().when(ourSqlConnection).doSomethingThatCanGoWrong();
+		IfThenElseStatus expected = getKOStatusBecauseOperationBWentWrongSoOperationDCleanUp();
+		IfThenElseStatus actual = bulkyProcessor.process(initialStatus);
 		Assertions.assertEquals(expected, actual);
 	}
 	
 	@Test
-	public void ifOperationCGoesWrongOnceProcessorReturnsAnOKState() {
-		Status initialStatus = new InitialStatus();
-		bulkyProcessor.setInput(initialStatus);
-		Status expected = getOKStatusEvenOperationCWentWrong();
-		Status actual = bulkyProcessor.getResult();
+	public void ifOperationCGoesWrongOnceProcessorReturnsAnOKState() throws Exception {
+		IfThenElseStatus initialStatus = new IfThenElseStatus();
+		Mockito.doNothing().doNothing().doThrow(new Exception()).doNothing().when(ourSqlConnection).doSomethingThatCanGoWrong();
+		IfThenElseStatus expected = getOKStatusEvenOperationCWentWrong();
+		IfThenElseStatus actual = bulkyProcessor.process(initialStatus);
 		Assertions.assertEquals(expected, actual);
 	}
 	
 	@Test
-	public void ifOperationCGoesWrongTwiceProcessorReturnsAKOStateAfterDoingSomeCleanup() {
-		Status initialStatus = new InitialStatus();
-		bulkyProcessor.setInput(initialStatus);
-		Status expected = getKOStatusBecauseOperationCWentWrongTwice();
-		Status actual = bulkyProcessor.getResult();
+	public void ifOperationCGoesWrongTwiceProcessorReturnsAKOStateAfterDoingSomeCleanup() throws Exception {
+		IfThenElseStatus initialStatus = new IfThenElseStatus();
+		Mockito.doNothing().doNothing().doThrow(new Exception()).doThrow(new Exception()).doNothing().when(ourSqlConnection).doSomethingThatCanGoWrong();
+		IfThenElseStatus expected = getKOStatusBecauseOperationCWentWrongTwice();
+		IfThenElseStatus actual = bulkyProcessor.process(initialStatus);
 		Assertions.assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void ifEveryOperationWentFineProcessorReturnsOKState() {
-		Status initialStatus = new InitialStatus();
-		bulkyProcessor.setInput(initialStatus);
-		Status expected = getOKStatus();
-		Status actual = bulkyProcessor.getResult();
+		IfThenElseStatus initialStatus = new IfThenElseStatus();
+		IfThenElseStatus expected = getOKStatus();
+		IfThenElseStatus actual = bulkyProcessor.process(initialStatus);
 		Assertions.assertEquals(expected, actual);
 	}
 	
-	private Status getKOStatusBecauseOperationAWentWrong() {
-		Status status = new KOStatus();
+	private IfThenElseStatus getKOStatusBecauseOperationAWentWrong() {
+		IfThenElseStatus status = new IfThenElseStatus();
+		status.setStatus("KO");
 		status.getLog().add("operation A went wrong.");
 		return status;
 	}
 	
-	private Status getKOStatusBecauseOperationBWentWrongSoOperationDCleanUp() {
-		Status status = new KOStatus();
+	private IfThenElseStatus getKOStatusBecauseOperationBWentWrongSoOperationDCleanUp() {
+		IfThenElseStatus status = new IfThenElseStatus();
+		status.setStatus("KO");
 		status.getLog().add("operation A went fine.");
 		status.getLog().add("operation B went wrong.");
 		status.getLog().add("operation D cleaned up.");
 		return status;
 	}
 
-	private Status getOKStatusEvenOperationCWentWrong() {
-		Status status = new OKStatus();
+	private IfThenElseStatus getOKStatusEvenOperationCWentWrong() {
+		IfThenElseStatus status = new IfThenElseStatus();
+		status.setStatus("OK");
 		status.getLog().add("operation A went fine.");
 		status.getLog().add("operation B went fine.");
 		status.getLog().add("operation C went wrong 1.");
@@ -112,8 +110,9 @@ public class IfThenElseProcessorTest {
 		return status;
 	}
 
-	private Status getKOStatusBecauseOperationCWentWrongTwice() {
-		Status status = new OKStatus();
+	private IfThenElseStatus getKOStatusBecauseOperationCWentWrongTwice() {
+		IfThenElseStatus status = new IfThenElseStatus();
+		status.setStatus("KO");
 		status.getLog().add("operation A went fine.");
 		status.getLog().add("operation B went fine.");
 		status.getLog().add("operation C went wrong 1.");
@@ -121,8 +120,9 @@ public class IfThenElseProcessorTest {
 		return status;
 	}
 
-	private Status getOKStatus() {
-		Status status = new OKStatus();
+	private IfThenElseStatus getOKStatus() {
+		IfThenElseStatus status = new IfThenElseStatus();
+		status.setStatus("OK");
 		status.getLog().add("operation A went fine.");
 		status.getLog().add("operation B went fine.");
 		status.getLog().add("operation C went fine.");

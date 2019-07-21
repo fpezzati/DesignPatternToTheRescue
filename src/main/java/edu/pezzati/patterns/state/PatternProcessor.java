@@ -1,14 +1,17 @@
 package edu.pezzati.patterns.state;
 
+import edu.pezzati.patterns.state.util.OurSqlConnection;
+
 public class PatternProcessor implements Processor {
 
-	private Status status;
-
-	public Status getResult() {
-		return status;
+	@Override
+	public Status process(Status status) {
+		return null;
 	}
 
-	public void setInput(Status initialStatus) {
-		status = initialStatus;
+	@Override
+	public void setSqlConnection(OurSqlConnection connection) {
+		// TODO Auto-generated method stub
+		
 	}
 }

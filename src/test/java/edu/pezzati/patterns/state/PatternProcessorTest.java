@@ -9,8 +9,7 @@ public class PatternProcessorTest {
     public void bulkyProcessoProvidesNoResultWithoutInput() {
 	Processor bulkyProcessor = new PatternProcessor();
 	Status initialStatus = null;
-	bulkyProcessor.setInput(initialStatus);
-	Status finalStatus = bulkyProcessor.getResult();
+	Status finalStatus = bulkyProcessor.process(initialStatus);
 	Assertions.assertNull(finalStatus);
     }
 }

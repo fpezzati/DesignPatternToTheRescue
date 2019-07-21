@@ -1,5 +1,7 @@
 package edu.pezzati.patterns.state;
 
+import edu.pezzati.patterns.state.util.OurSqlConnection;
+
 /**
  * Processor flow: <br>
  * - apply operation A. If A goes wrong process will end in KO state, <br>
@@ -16,7 +18,7 @@ package edu.pezzati.patterns.state;
  */
 public interface Processor {
 
-	Status getResult();
-
-	void setInput(Status initialStatus);
+	Status process(Status status);
+	
+	void setSqlConnection(OurSqlConnection connection);
 }

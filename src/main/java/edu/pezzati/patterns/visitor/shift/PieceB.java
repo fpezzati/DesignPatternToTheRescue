@@ -1,6 +1,8 @@
 package edu.pezzati.patterns.visitor.shift;
 
-public class PieceB extends AbstractPiece {
+import edu.pezzati.patterns.visitor.DutyOperator;
+
+public class PieceB extends AbstractPiece implements Visitable {
 
 	private boolean isBusy;
 
@@ -32,5 +34,10 @@ public class PieceB extends AbstractPiece {
 		if (isBusy != other.isBusy)
 			return false;
 		return true;
+	}
+
+	@Override
+	public void accept(DutyOperator operator) {
+		operator.visit(this);
 	}
 }

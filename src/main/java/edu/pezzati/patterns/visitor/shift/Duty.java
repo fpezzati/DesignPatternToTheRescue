@@ -3,7 +3,9 @@ package edu.pezzati.patterns.visitor.shift;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Duty extends Shift {
+import edu.pezzati.patterns.visitor.DutyOperator;
+
+public class Duty extends Shift implements Visitable {
 
 	private List<PieceX> pieceX;
 	
@@ -42,5 +44,10 @@ public class Duty extends Shift {
 		} else if (!pieceX.equals(other.pieceX))
 			return false;
 		return true;
+	}
+
+	@Override
+	public void accept(DutyOperator operator) {
+		operator.visit(this);
 	}
 }

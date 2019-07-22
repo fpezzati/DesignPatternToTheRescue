@@ -15,6 +15,7 @@ public class AddVavToTypeAPieces {
 	public Duty addVavs(Duty duty) {
 		if(duty == null) return null;
 		Duty dutyToReturn = new Duty();
+		dutyToReturn.setName(duty.getName());
 		for(PieceX piecex : duty.getPieceX()) {
 			handlePieceX(piecex, dutyToReturn);
 		}
@@ -29,10 +30,18 @@ public class AddVavToTypeAPieces {
 			} else if (piece instanceof PieceB) {
 				pieces.add(piece);
 			} else if (piece instanceof PieceA) {
-//				if(canAddPieceA(piece, pieces)) {
-//					pieces.add(new Vav())
-//				}
+				if(pieces.isEmpty() || !(pieces.get(pieces.size()-1) instanceof Vav)) {
+					pieces.add(new Vav());
+					pieces.add(piece);
+					pieces.add(new Vav());
+				} else {
+					pieces.add(piece);
+					pieces.add(new Vav());
+				}
 			}
 		}
+		piecex.getAbstractPiece().clear();
+		piecex.getAbstractPiece().addAll(pieces);
+		dutyToReturn.getPieceX().add(piecex);
 	}
 }

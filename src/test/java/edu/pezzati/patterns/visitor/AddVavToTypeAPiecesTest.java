@@ -105,12 +105,11 @@ public class AddVavToTypeAPiecesTest {
 		duty.getPieceX().add(new PieceX());
 		duty.getPieceX().get(1).getAbstractPiece().add(new PieceB());
 		duty.getPieceX().get(1).getAbstractPiece().add(new PieceB());
-		duty.getPieceX().get(1).getAbstractPiece().add(new Vav());
-		duty.getPieceX().get(1).getAbstractPiece().add(new PieceA());
-		duty.getPieceX().get(1).getAbstractPiece().add(new Vav());
-		duty.getPieceX().get(1).getAbstractPiece().add(new PieceA());
-		duty.getPieceX().get(1).getAbstractPiece().add(new Vav());
 		duty.getPieceX().get(2).getAbstractPiece().add(new PieceB());
+		duty.getPieceX().get(2).getAbstractPiece().add(new Vav());
+		duty.getPieceX().get(2).getAbstractPiece().add(new PieceA());
+		duty.getPieceX().get(2).getAbstractPiece().add(new Vav());
+		duty.getPieceX().get(2).getAbstractPiece().add(new PieceA());
 		duty.getPieceX().get(2).getAbstractPiece().add(new Vav());
 		duty.getPieceX().get(2).getAbstractPiece().add(new PieceA());
 		duty.getPieceX().get(2).getAbstractPiece().add(new Vav());
@@ -127,9 +126,8 @@ public class AddVavToTypeAPiecesTest {
 		duty.getPieceX().get(1).getAbstractPiece().add(new PieceB());
 		duty.getPieceX().get(1).getAbstractPiece().add(new PieceB());
 		duty.getPieceX().get(2).getAbstractPiece().add(new PieceB());
-		duty.getPieceX().get(0).getAbstractPiece().add(new Vav());
-		duty.getPieceX().get(0).getAbstractPiece().add(new PieceA());
-		duty.getPieceX().get(0).getAbstractPiece().add(new Vav());
+		duty.getPieceX().get(1).getAbstractPiece().add(new Vav());
+		duty.getPieceX().get(1).getAbstractPiece().add(new PieceA());
 		duty.getPieceX().get(1).getAbstractPiece().add(new Vav());
 		duty.getPieceX().get(1).getAbstractPiece().add(new PieceA());
 		duty.getPieceX().get(1).getAbstractPiece().add(new Vav());

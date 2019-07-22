@@ -5,7 +5,7 @@ import java.util.Objects;
 import edu.pezzati.patterns.state.Status;
 import edu.pezzati.patterns.state.util.OurSqlConnection;
 
-public class StatusC implements Status {
+public class StatusCRetry implements Status {
 
 	private OurSqlConnection connection;
 
@@ -15,9 +15,7 @@ public class StatusC implements Status {
 			connection.doSomethingThatCanGoWrong();
 			return new StatusOK();
 		} catch (Exception e) {
-			Status status = new StatusCRetry();
-			status.setConnection(connection);
-			return status;
+			return new StatusKO();
 		}
 	}
 
@@ -44,7 +42,7 @@ public class StatusC implements Status {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		StatusC other = (StatusC) obj;
+		StatusCRetry other = (StatusCRetry) obj;
 		if (connection == null) {
 			if (other.connection != null)
 				return false;

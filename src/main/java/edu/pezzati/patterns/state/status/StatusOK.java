@@ -3,23 +3,20 @@ package edu.pezzati.patterns.state.status;
 import edu.pezzati.patterns.state.Status;
 import edu.pezzati.patterns.state.util.OurSqlConnection;
 
-public class StatusD implements Status {
-
-	private OurSqlConnection connection;
+public class StatusOK implements Status {
 
 	@Override
 	public Status next() {
-		return new StatusKO();
+		return this;
 	}
 
 	@Override
 	public OurSqlConnection getConnection() {
-		return connection;
+		return null;
 	}
 
 	@Override
 	public void setConnection(OurSqlConnection connection) {
-		this.connection = connection;
+		// DO NOTHING.
 	}
-
 }
